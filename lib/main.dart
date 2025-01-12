@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:product/features/main/view/main_view.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'features/main/view/main_view.dart';
+import 'theme/app_theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -10,10 +13,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Products',
-      home: MainView(),
+      theme: AppTheme.lightTheme,
+      home: const MainView(),
     );
   }
 }
