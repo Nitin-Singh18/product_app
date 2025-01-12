@@ -65,47 +65,36 @@ class _MainViewState extends State<MainView> {
         index: _selectedIndex,
         children: _screens,
       ),
-      floatingActionButton: SizedBox(
-          height: 60,
-          width: 60,
-          child: Consumer(builder: (context, ref, child) {
-            return Badge.count(
-                count: ref.watch(cartViewModelProvider).itemCount,
-                alignment: Alignment.topCenter,
-                child: FloatingActionButton(
-                  onPressed: () => _onItemTapped(4),
-                  backgroundColor: AppColor.white,
-                  shape: RoundedRectangleBorder(
-                    side: const BorderSide(width: 6, color: AppColor.green),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: svgPicture(
-                      imagePath: AssetPath.cartIcon, color: AppColor.green),
-                ));
-          })),
+      floatingActionButton: _buildFloatingActionButton(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: Container(
-        clipBehavior: Clip.antiAlias,
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(borderRadiusMedium),
-                topRight: Radius.circular(borderRadiusMedium))),
-        child: BottomAppBar(
-          clipBehavior: Clip.hardEdge,
-          padding: const EdgeInsets.only(top: 24),
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 5.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavBarItem(AssetPath.homeIcon, "Home", 0),
-              _buildNavBarItem(AssetPath.orderIcon, "Order", 1),
-              const SizedBox(width: 48),
-              _buildNavBarItem(AssetPath.giftIcon, "Offer", 2),
-              _buildNavBarItem(AssetPath.menuIcon, "More", 3),
-            ],
+      bottomNavigationBar: Stack(
+        children: [
+          CustomPaint(
+            size: Size(MediaQuery.sizeOf(context).width, 80),
+            painter: CurvedBottomNavBarPainter(),
           ),
-        ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: BottomAppBar(
+              color: Colors.transparent,
+              padding: const EdgeInsets.only(top: 24),
+              shape: const CircularNotchedRectangle(),
+              notchMargin: 5.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildNavBarItem(AssetPath.homeIcon, "Home", 0),
+                  _buildNavBarItem(AssetPath.orderIcon, "Order", 1),
+                  const SizedBox(width: 48),
+                  _buildNavBarItem(AssetPath.giftIcon, "Offer", 2),
+                  _buildNavBarItem(AssetPath.menuIcon, "More", 3),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -129,4 +118,84 @@ class _MainViewState extends State<MainView> {
       ),
     );
   }
+
+  Widget _buildFloatingActionButton(BuildContext context) => Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Positioned(
+            bottom: 40,
+            child: SizedBox(
+              height: 68,
+              width: 66,
+              child: FloatingActionButton(
+                onPressed: () => _onItemTapped(4),
+                backgroundColor: AppColor.white,
+                shape: const StadiumBorder(
+                  side: BorderSide(
+                    color: AppColor.green,
+                    width: 8,
+                  ),
+                ),
+                child: svgPicture(
+                  imagePath: AssetPath.cartIcon,
+                  color: AppColor.green,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 90,
+            child: Consumer(
+              builder: (context, ref, child) {
+                return SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: Badge.count(
+                    backgroundColor: Colors.orange,
+                    count: ref.watch(cartViewModelProvider).itemCount,
+                    alignment: Alignment.topCenter,
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      );
+}
+
+class CurvedBottomNavBarPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = AppColor.green
+      ..style = PaintingStyle.fill;
+
+    final path = Path()
+      ..moveTo(0, 32)
+      // start curve
+      ..arcToPoint(Offset(size.width * 0.06, 10),
+          radius: const Radius.circular(borderRadiusLarge))
+      ..lineTo(size.width * 0.38, 1)
+      // left edge for curve
+      ..arcToPoint(Offset(size.width * 0.4, 6),
+          radius: const Radius.circular(8))
+      // under curve
+      ..arcToPoint(Offset(size.width * 0.6, 6),
+          radius: const Radius.circular(40), clockwise: false)
+      // right edge for curve
+      ..arcToPoint(Offset(size.width * 0.62, 1),
+          radius: const Radius.circular(8))
+      ..lineTo(size.width * 0.94, 10)
+      // end curve
+      ..arcToPoint(Offset(size.width, 32),
+          radius: const Radius.circular(borderRadiusLarge))
+      ..lineTo(size.width, size.height)
+      ..lineTo(0, size.height)
+      ..close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
