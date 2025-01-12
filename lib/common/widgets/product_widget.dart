@@ -1,29 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../data/models/product.dart';
+import '../../features/cart/view_model/cart_view_model.dart';
+import '../../theme/app_color.dart';
 import '../constants.dart';
 import '../extensions/context_extension.dart';
 import '../utils.dart';
 import 'product_image_widget.dart';
-import '../../data/models/product.dart';
-import '../../theme/app_color.dart';
 
-class ProductWidget extends StatelessWidget {
+class ProductWidget extends ConsumerWidget {
   final Product product;
 
   const ProductWidget({super.key, required this.product});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // trigger rebuild
+    ref.watch(cartViewModelProvider);
+    final cartNotifier = ref.read(cartViewModelProvider.notifier);
+
+    final productQuantity = ref
+        .watch(cartViewModelProvider.notifier)
+        .getProductQuantity(product.id);
+
     return Column(
       children: [
-        ProductImageWidget(
-          image: product.image,
-          width: double.infinity,
-          height: 140,
+        Hero(
+          tag: "product-${product.id}-${product.title}",
+          child: ProductImageWidget(
+            image: product.image,
+            width: double.infinity,
+            height: 140,
+          ),
         ),
         vGap(2),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
               child: Column(
@@ -57,11 +70,12 @@ class ProductWidget extends StatelessWidget {
                     color: AppColor.green,
                   ),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      if (true) ...[
+                      if (productQuantity > 0) ...[
                         InkWell(
                           onTap: () {
-                            print("Remove");
+                            cartNotifier.removeProduct(product);
                           },
                           child: const Icon(
                             Icons.remove,
@@ -69,14 +83,14 @@ class ProductWidget extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "01",
+                          productQuantity.toString(),
                           style: context.textTheme.bodyMedium
                               ?.copyWith(color: AppColor.white),
                         ),
                       ],
                       InkWell(
                         onTap: () {
-                          print("Add");
+                          cartNotifier.addProduct(product);
                         },
                         child: const Icon(
                           Icons.add,

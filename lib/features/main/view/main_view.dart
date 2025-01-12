@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/constants.dart';
 import '../../../common/extensions/context_extension.dart';
 import '../../../common/utils.dart';
 import '../../../theme/app_color.dart';
+import '../../cart/view_model/cart_view_model.dart';
 import '../../home/view/home_view.dart';
 import '../../skeleton_view/view/skeleton_view.dart';
 
@@ -20,6 +22,7 @@ class _MainViewState extends State<MainView> {
     SkeletonView(screenTitle: "Order"),
     SkeletonView(screenTitle: "Offer"),
     SkeletonView(screenTitle: "More"),
+    SkeletonView(screenTitle: "Cart")
   ];
   int _selectedIndex = 0;
 
@@ -34,20 +37,19 @@ class _MainViewState extends State<MainView> {
     return Scaffold(
       appBar: AppBar(
         title: Padding(
-          padding: const EdgeInsets.only(left: 16
-          ),
+          padding: const EdgeInsets.only(left: 16),
           child: Text(
             "Hey 😊\nLets search your prodcut",
-            style: context.textTheme.titleMedium?.copyWith(color: AppColor.white),
+            style:
+                context.textTheme.titleMedium?.copyWith(color: AppColor.white),
           ),
         ),
-         actions: [
+        actions: [
           GestureDetector(
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) =>
-                        const SkeletonView(screenTitle: "Profile"))),
+            onTap: () => navigateWithSlide(
+              context,
+              const SkeletonView(screenTitle: "Profile"),
+            ),
             child: const CircleAvatar(
               backgroundImage: AssetImage(
                 AssetPath.profileImage,
@@ -83,12 +85,15 @@ class _MainViewState extends State<MainView> {
           Positioned(
             top: -30,
             child: FloatingActionButton(
-              onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => const SkeletonView(screenTitle: "Cart"))),
-              child: svgPicture(
-                  imagePath: AssetPath.cartIcon, color: AppColor.green),
+              onPressed: () => _onItemTapped(4),
+              backgroundColor: AppColor.white,
+              child: Consumer(builder: (context, ref, child) {
+                return Badge.count(
+                  count: ref.watch(cartViewModelProvider).itemCount,
+                  child: svgPicture(
+                      imagePath: AssetPath.cartIcon, color: AppColor.green),
+                );
+              }),
             ),
           ),
         ],

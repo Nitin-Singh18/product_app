@@ -9,6 +9,7 @@ import '../../../common/widgets/k_text_field.dart';
 import '../../../common/widgets/product_widget.dart';
 import '../../../common/widgets/screen_content_wrapper_widget.dart';
 import '../../../data/models/product.dart';
+import '../../skeleton_view/view/skeleton_view.dart';
 import '../view_model/home_view_model.dart';
 
 class HomeView extends StatefulWidget {
@@ -43,10 +44,17 @@ class _HomeViewState extends State<HomeView> {
             Padding(
               padding: const EdgeInsets.symmetric(
                   horizontal: horizontalPaddingLarge),
-              child: KTextField(
-                controller: searchController,
-                label: "Search your product ...",
-                prefixIcon: AssetPath.searchIcon,
+              child: InkWell(
+                onTap: () => navigateWithSlide(
+                  context,
+                  const SkeletonView(screenTitle: "Search Screen"),
+                ),
+                child: KTextField(
+                  controller: searchController,
+                  label: "Search your product ...",
+                  prefixIcon: AssetPath.searchIcon,
+                  isEnabled: false,
+                ),
               ),
             ),
             vGap(24),
@@ -113,7 +121,7 @@ class _HomeViewState extends State<HomeView> {
         isCategories: false,
         popularDeals: popularDeals,
         items: SizedBox(
-          height:220,
+          height: 220,
           child: ListView.builder(
             itemCount: popularDeals.take(4).length,
             scrollDirection: Axis.horizontal,
@@ -122,7 +130,7 @@ class _HomeViewState extends State<HomeView> {
               return Padding(
                 padding: const EdgeInsets.only(right: horizontalPaddingSmall),
                 child: SizedBox(
-                  width:  140,
+                  width: 140,
                   child: ProductWidget(
                     product: product,
                   ),

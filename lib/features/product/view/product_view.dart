@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../../../common/constants.dart';
-import '../../../common/extensions/string_extension.dart';
 import '../../../common/widgets/product_app_bar.dart';
 import '../../../common/widgets/product_widget.dart';
 import '../../../common/widgets/screen_content_wrapper_widget.dart';
 import '../../../data/models/product.dart';
 import '../../../theme/app_color.dart';
 
-class CategoryItemsView extends StatelessWidget {
+class ProductView extends StatelessWidget {
   final String title;
   final List<Product> products;
 
-  const CategoryItemsView(
-      {super.key, required this.title, required this.products});
+  const ProductView({super.key, required this.title, required this.products});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ProductAppBar(
-          context: context, viewTitle: title.capitalizeEachWord()),
+      appBar: ProductAppBar(context: context, viewTitle: title),
       body: SafeArea(
         child: ScreenContentWrapperWidget(
           child: Container(

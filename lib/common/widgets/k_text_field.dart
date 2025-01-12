@@ -9,22 +9,29 @@ class KTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
   final String? prefixIcon;
+  final bool isEnabled;
 
-  const KTextField(
-      {super.key,
-      required this.label,
-      this.prefixIcon,
-      required this.controller});
+  const KTextField({
+    super.key,
+    required this.label,
+    this.prefixIcon,
+    required this.controller,
+    this.isEnabled = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: isEnabled,
       controller: controller,
       decoration: InputDecoration(
         filled: true,
         fillColor: AppColor.white,
         prefixIcon: prefixIcon != null
-            ? svgPicture(imagePath: prefixIcon!, color: AppColor.grey)
+            ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: svgPicture(imagePath: prefixIcon!, color: AppColor.grey),
+              )
             : null,
         labelText: label,
         labelStyle:

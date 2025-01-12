@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/models/product.dart';
 import '../../features/categories/view/categories_view.dart';
-import '../../features/category_items/view/category_items_view.dart';
+import '../../features/product/view/product_view.dart';
 import '../../theme/app_color.dart';
 import '../constants.dart';
 import '../extensions/context_extension.dart';
@@ -59,19 +59,13 @@ class ItemsTileWidget extends StatelessWidget {
                     style: context.textTheme.titleMedium
                         ?.copyWith(color: AppColor.green),
                   ),
-                  onPressed: () => Navigator.push(
+                  onPressed: () => navigateWithSlide(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => isCategories
-                          ? CategoriesView(
-                              title: title,
-                              categories: categories!,
-                            )
-                          : CategoryItemsView(
-                              title: title, products: popularDeals!),
-                    ),
+                    isCategories
+                        ? CategoriesView(title: title, categories: categories!)
+                        : ProductView(title: title, products: popularDeals!),
                   ),
-                )
+                ),
               ],
             ),
           ),

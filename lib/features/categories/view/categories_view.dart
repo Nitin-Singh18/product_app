@@ -41,6 +41,7 @@ class CategoriesView extends StatelessWidget {
                 return CategoryItemWidget(
                   image: category.value,
                   title: category.key,
+                  isHeroAnimation: true,
                 );
               },
             ),
