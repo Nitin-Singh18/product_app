@@ -35,11 +35,12 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         title: Padding(
           padding: const EdgeInsets.only(left: 16),
           child: Text(
-            "Hey 😊\nLets search your prodcut",
+            "Hey 😊\nLets search your products",
             style:
                 context.textTheme.titleMedium?.copyWith(color: AppColor.white),
           ),
@@ -54,7 +55,7 @@ class _MainViewState extends State<MainView> {
               backgroundImage: AssetImage(
                 AssetPath.profileImage,
               ),
-              radius: 20,
+              radius: 22,
             ),
           ),
           hGap(horizontalPaddingLarge),
@@ -64,39 +65,47 @@ class _MainViewState extends State<MainView> {
         index: _selectedIndex,
         children: _screens,
       ),
-      bottomNavigationBar: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.center,
-        children: [
-          BottomAppBar(
-            shape: const CircularNotchedRectangle(),
-            notchMargin: 8.0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavBarItem(AssetPath.homeIcon, "Home", 0),
-                _buildNavBarItem(AssetPath.orderIcon, "Order", 1),
-                const SizedBox(width: 48), // Space for FAB
-                _buildNavBarItem(AssetPath.giftIcon, "Offer", 2),
-                _buildNavBarItem(AssetPath.menuIcon, "More", 3),
-              ],
-            ),
-          ),
-          Positioned(
-            top: -30,
-            child: FloatingActionButton(
-              onPressed: () => _onItemTapped(4),
-              backgroundColor: AppColor.white,
-              child: Consumer(builder: (context, ref, child) {
-                return Badge.count(
-                  count: ref.watch(cartViewModelProvider).itemCount,
+      floatingActionButton: SizedBox(
+          height: 60,
+          width: 60,
+          child: Consumer(builder: (context, ref, child) {
+            return Badge.count(
+                count: ref.watch(cartViewModelProvider).itemCount,
+                alignment: Alignment.topCenter,
+                child: FloatingActionButton(
+                  onPressed: () => _onItemTapped(4),
+                  backgroundColor: AppColor.white,
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(width: 6, color: AppColor.green),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
                   child: svgPicture(
                       imagePath: AssetPath.cartIcon, color: AppColor.green),
-                );
-              }),
-            ),
+                ));
+          })),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(borderRadiusMedium),
+                topRight: Radius.circular(borderRadiusMedium))),
+        child: BottomAppBar(
+          clipBehavior: Clip.hardEdge,
+          padding: const EdgeInsets.only(top: 24),
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 5.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildNavBarItem(AssetPath.homeIcon, "Home", 0),
+              _buildNavBarItem(AssetPath.orderIcon, "Order", 1),
+              const SizedBox(width: 48),
+              _buildNavBarItem(AssetPath.giftIcon, "Offer", 2),
+              _buildNavBarItem(AssetPath.menuIcon, "More", 3),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -111,7 +120,7 @@ class _MainViewState extends State<MainView> {
             imagePath: icon,
             color: itemColor,
           ),
-          vGap(2),
+          vGap(3),
           Text(
             name,
             style: context.textTheme.labelMedium?.copyWith(color: itemColor),

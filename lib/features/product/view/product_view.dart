@@ -37,7 +37,10 @@ class ProductView extends StatelessWidget {
               itemCount: products.length,
               itemBuilder: (context, index) {
                 final product = products[index];
-                return ProductWidget(product: product);
+                return ProductWidget(
+                  product: product,
+                  isHeroAnimation: true,
+                );
               },
             ),
           ),

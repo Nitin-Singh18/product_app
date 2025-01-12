@@ -11,30 +11,11 @@ import '../../../common/widgets/product_widget.dart';
 import '../../../common/widgets/screen_content_wrapper_widget.dart';
 import '../../../data/models/product.dart';
 import '../../../theme/app_color.dart';
- import '../../search/view/search_view.dart';
+import '../../search/view/search_view.dart';
 import '../view_model/home_view_model.dart';
 
-class HomeView extends StatefulWidget {
+class HomeView extends StatelessWidget {
   const HomeView({super.key});
-
-  @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
-  late final TextEditingController searchController;
-
-  @override
-  void initState() {
-    super.initState();
-    searchController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
 
   void refresh(ref) async => ref.invalidate(homeViewModelProvider);
 
@@ -52,12 +33,9 @@ class _HomeViewState extends State<HomeView> {
               child: InkWell(
                 onTap: () => navigateWithSlide(
                   context,
-                  SearchView(
-                    searchController: searchController,
-                  ),
+                  const SearchView(),
                 ),
-                child: KTextField(
-                  controller: searchController,
+                child: const KTextField(
                   label: "Search your product ...",
                   prefixIcon: AssetPath.searchIcon,
                   isEnabled: false,

@@ -34,13 +34,14 @@ class CategoryItemWidget extends ConsumerWidget {
         width: 108,
         child: Column(
           children: [
-            isHeroAnimation
-                ? Hero(
-                    tag: "product-${products.first.id}",
-                    child: ProductImageWidget(image: image))
-                : ProductImageWidget(image: image),
+            heroAnimation(
+              isAnimation: isHeroAnimation,
+              tag: "product-${products.first.id}",
+              child: ProductImageWidget(image: image),
+            ),
             vGap(4),
-            Hero(
+            heroAnimation(
+              isAnimation: isHeroAnimation,
               tag: title,
               child: Text(
                 title.capitalizeEachWord(),

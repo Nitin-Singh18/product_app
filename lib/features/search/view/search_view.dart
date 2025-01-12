@@ -10,9 +10,7 @@ import '../../../data/models/product.dart';
 import '../../home/view_model/home_view_model.dart';
 
 class SearchView extends ConsumerStatefulWidget {
-  final TextEditingController searchController;
-
-  const SearchView({required this.searchController, super.key});
+  const SearchView({super.key});
 
   @override
   ConsumerState<SearchView> createState() => _SearchScreenState();
@@ -20,15 +18,23 @@ class SearchView extends ConsumerStatefulWidget {
 
 class _SearchScreenState extends ConsumerState<SearchView> {
   List<Product> _filteredProducts = [];
+  late final TextEditingController searchController;
   late final FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
+    searchController = TextEditingController();
     _focusNode = FocusNode();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(_focusNode);
     });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -43,7 +49,7 @@ class _SearchScreenState extends ConsumerState<SearchView> {
           child: Column(
             children: [
               KTextField(
-                controller: widget.searchController,
+                controller: searchController,
                 focusNode: _focusNode,
                 label: "Search...",
                 prefixIcon: AssetPath.searchIcon,

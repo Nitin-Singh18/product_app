@@ -25,8 +25,6 @@ SvgPicture svgPicture({
   );
 }
 
-
-
 void navigateWithSlide(BuildContext context, Widget destination) {
   Navigator.push(
     context,
@@ -38,7 +36,7 @@ void navigateWithSlide(BuildContext context, Widget destination) {
         const curve = Curves.easeInOut;
 
         final tween =
-        Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
         final offsetAnimation = animation.drive(tween);
 
         return SlideTransition(
@@ -49,3 +47,9 @@ void navigateWithSlide(BuildContext context, Widget destination) {
     ),
   );
 }
+
+Widget heroAnimation(
+        {required bool isAnimation,
+        required Widget child,
+        required String tag}) =>
+    isAnimation ? Hero(tag: tag, child: child) : child;

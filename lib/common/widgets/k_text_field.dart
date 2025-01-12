@@ -6,7 +6,7 @@ import '../extensions/context_extension.dart';
 import '../utils.dart';
 
 class KTextField extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String label;
   final String? prefixIcon;
   final bool isEnabled;
@@ -17,7 +17,7 @@ class KTextField extends StatelessWidget {
     super.key,
     required this.label,
     this.prefixIcon,
-    required this.controller,
+     this.controller,
     this.isEnabled = true,
     this.onChanged, this.focusNode,
   });

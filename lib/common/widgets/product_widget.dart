@@ -11,8 +11,10 @@ import 'product_image_widget.dart';
 
 class ProductWidget extends ConsumerWidget {
   final Product product;
+  final bool isHeroAnimation;
 
-  const ProductWidget({super.key, required this.product});
+  const ProductWidget(
+      {super.key, required this.product, this.isHeroAnimation = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,8 +28,9 @@ class ProductWidget extends ConsumerWidget {
 
     return Column(
       children: [
-        Hero(
-          tag: "product-${product.id}-${product.title}",
+        heroAnimation(
+          isAnimation: isHeroAnimation,
+          tag: "product-${product.id}",
           child: ProductImageWidget(
             image: product.image,
             width: double.infinity,
