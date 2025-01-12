@@ -1,6 +1,9 @@
 # Product
 
+![Project Banner](readme_images/project_banner.png)
+
 ## Table of Contents
+
 - [Project Setup](#project-setup)
 
 ## Project Setup
