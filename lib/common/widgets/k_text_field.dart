@@ -10,6 +10,8 @@ class KTextField extends StatelessWidget {
   final String label;
   final String? prefixIcon;
   final bool isEnabled;
+  final Function(String)? onChanged;
+  final FocusNode? focusNode;
 
   const KTextField({
     super.key,
@@ -17,12 +19,15 @@ class KTextField extends StatelessWidget {
     this.prefixIcon,
     required this.controller,
     this.isEnabled = true,
+    this.onChanged, this.focusNode,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      focusNode: focusNode,
       enabled: isEnabled,
+      onChanged: onChanged,
       controller: controller,
       decoration: InputDecoration(
         filled: true,

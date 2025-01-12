@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/constants.dart';
+import '../../../common/extensions/context_extension.dart';
 import '../../../common/utils.dart';
 import '../../../common/widgets/category_item_widget.dart';
 import '../../../common/widgets/items_tile_widget.dart';
@@ -9,7 +10,8 @@ import '../../../common/widgets/k_text_field.dart';
 import '../../../common/widgets/product_widget.dart';
 import '../../../common/widgets/screen_content_wrapper_widget.dart';
 import '../../../data/models/product.dart';
-import '../../skeleton_view/view/skeleton_view.dart';
+import '../../../theme/app_color.dart';
+ import '../../search/view/search_view.dart';
 import '../view_model/home_view_model.dart';
 
 class HomeView extends StatefulWidget {
@@ -34,10 +36,13 @@ class _HomeViewState extends State<HomeView> {
     super.dispose();
   }
 
+  void refresh(ref) async => ref.invalidate(homeViewModelProvider);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             vGap(16),
@@ -47,7 +52,9 @@ class _HomeViewState extends State<HomeView> {
               child: InkWell(
                 onTap: () => navigateWithSlide(
                   context,
-                  const SkeletonView(screenTitle: "Search Screen"),
+                  SearchView(
+                    searchController: searchController,
+                  ),
                 ),
                 child: KTextField(
                   controller: searchController,
@@ -68,18 +75,48 @@ class _HomeViewState extends State<HomeView> {
                                 ref.read(homeViewModelProvider);
                             final categories = homeViewState.categories;
                             final popularDeals = homeViewState.popularDeals;
-                            return Column(
-                              children: [
-                                _buildCategories(categories.entries.toList()),
-                                vGap(12),
-                                _buildPopularDeals(popularDeals),
-                              ],
+                            return RefreshIndicator(
+                              onRefresh: () async => refresh(ref),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    _buildCategories(
+                                        categories.entries.toList()),
+                                    vGap(12),
+                                    _buildBanners(),
+                                    vGap(12),
+                                    _buildPopularDeals(popularDeals),
+                                    vGap(100),
+                                  ],
+                                ),
+                              ),
                             );
                           },
                           loading: () =>
                               const Center(child: CircularProgressIndicator()),
-                          error: (error, stack) => Center(
-                            child: Text('Error: $error'),
+                          error: (error, stack) => Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Error: $error'),
+                              InkWell(
+                                onTap: () => refresh(ref),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        borderRadiusSmall),
+                                    color: AppColor.green,
+                                  ),
+                                  height: 36,
+                                  width: 60,
+                                  child: Text(
+                                    "Retry",
+                                    style: context.textTheme.bodyMedium
+                                        ?.copyWith(color: AppColor.white),
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                         );
                   },
@@ -113,6 +150,41 @@ class _HomeViewState extends State<HomeView> {
               );
             },
           ),
+        ),
+      );
+
+  Widget _buildBanners() => SizedBox(
+        height: 136,
+        child: ListView.builder(
+          itemCount: banners.length,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (_, index) {
+            return Padding(
+              padding: const EdgeInsets.only(right: horizontalPaddingSmall),
+              child: Container(
+                width: 260,
+                decoration: BoxDecoration(
+                  color: AppColor.grey,
+                  borderRadius: BorderRadius.circular(borderRadiusMedium),
+                ),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        borderRadiusSmall,
+                      ),
+                      child: Image.network(
+                        height: 136,
+                        width: 260,
+                        fit: BoxFit.cover,
+                        banners[index],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         ),
       );
 
