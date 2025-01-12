@@ -1,4 +1,4 @@
-# Boss Investor
+# Product
 
 ## Table of Contents
 - [Project Setup](#project-setup)
